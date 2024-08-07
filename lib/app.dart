@@ -60,7 +60,7 @@ class _AppState extends State<App> {
     return FloatingActionButton(
       onPressed: () {},
       shape: const CircleBorder(),
-      elevation: 0,
+      elevation: 4,
       child: Container(
         padding: const EdgeInsets.all(12),
         height: 60,
@@ -81,6 +81,8 @@ class _AppState extends State<App> {
 
   BottomAppBar navBar() {
     return BottomAppBar(
+      elevation: 20,
+      shadowColor: Colors.black,
       color: Colors.white,
       height: 64,
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
