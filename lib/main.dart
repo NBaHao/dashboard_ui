@@ -1,4 +1,4 @@
-import 'package:dashboard_ui/dashboard.dart';
+import 'package:dashboard_ui/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true),
-      home: const Dashboard(),
+      home: const App(),
       debugShowCheckedModeBanner: false,
     );
   }

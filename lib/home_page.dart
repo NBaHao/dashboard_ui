@@ -5,19 +5,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-enum Page { home, charging, wallet, account }
-
-class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
   int _currentCarIndex = 0;
   int _currentBannerIndex = 0;
-  Page _currentPage = Page.home;
 
   Size _size = Size.zero;
   final GlobalKey _key = GlobalKey();
@@ -40,47 +41,39 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: Colors.white,
-        body: CustomScrollView(
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Column(
-                  children: [
-                    titleWidget(),
-                    carInformationWidget(),
-                  ],
-                ),
-              ]),
+    super.build(context);
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildListDelegate([
+            Column(
+              children: [
+                titleWidget(),
+                carInformationWidget(),
+              ],
             ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _StickyHeaderDelegate(
-                child: findChargingStationWidget(),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Column(
-                  children: [
-                    userWalletWidget(),
-                    dashboardWidget(),
-                    bannerWidget(),
-                    menuWidget(),
-                    newsWidget(),
-                  ],
-                ),
-              ]),
-            ),
-          ],
+          ]),
         ),
-        floatingActionButton: scanQRButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: navBar(),
-      ),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _StickyHeaderDelegate(
+            child: findChargingStationWidget(),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate([
+            Column(
+              children: [
+                userWalletWidget(),
+                dashboardWidget(),
+                bannerWidget(),
+                menuWidget(),
+                newsWidget(),
+              ],
+            ),
+          ]),
+        ),
+      ],
     );
   }
 
@@ -281,164 +274,6 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
       ],
-    );
-  }
-
-  BottomAppBar navBar() {
-    return BottomAppBar(
-      color: Colors.white,
-      height: 64,
-      padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 8,
-      child: SizedBox(
-        width: double.infinity,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            const Text('Bắt Đầu Sạc!',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF59AD00),
-                    fontWeight: FontWeight.w500)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        _currentPage = Page.home;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SvgPicture.asset(_currentPage == Page.home
-                            ? 'assets/home-2.svg'
-                            : 'assets/home.svg'),
-                        Text('Trang chủ',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: _currentPage == Page.home
-                                    ? FontWeight.bold
-                                    : FontWeight.w400))
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        _currentPage = Page.charging;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SvgPicture.asset(_currentPage == Page.charging
-                            ? 'assets/gas-station-2.svg'
-                            : 'assets/gas-station.svg'),
-                        Text('Phiên sạc',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: _currentPage == Page.charging
-                                    ? FontWeight.bold
-                                    : FontWeight.w400))
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 80,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        _currentPage = Page.wallet;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        SvgPicture.asset(_currentPage == Page.wallet
-                            ? 'assets/empty-wallet-2.svg'
-                            : 'assets/empty-wallet.svg'),
-                        Text('Ví tiền',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: _currentPage == Page.wallet
-                                    ? FontWeight.bold
-                                    : FontWeight.w400))
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      setState(() {
-                        _currentPage = Page.account;
-                      });
-                    },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          SvgPicture.asset(_currentPage == Page.account
-                              ? 'assets/profile-2.svg'
-                              : 'assets/profile.svg'),
-                          Text('Tài khoản',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: _currentPage == Page.account
-                                      ? FontWeight.bold
-                                      : FontWeight.w400))
-                        ]),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  FloatingActionButton scanQRButton() {
-    return FloatingActionButton(
-      onPressed: () {},
-      shape: const CircleBorder(),
-      elevation: 0,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        height: 60,
-        width: 60,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle, // circular shape
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF5BAF00),
-              Color(0xFF81D100),
-            ],
-          ),
-        ),
-        child: SvgPicture.asset('assets/scan.svg'),
-      ),
     );
   }
 
@@ -683,8 +518,7 @@ class _DashboardState extends State<Dashboard> {
                   backgroundImage: AssetImage('assets/avatar.jpg'),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -706,11 +540,11 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           Positioned(
-            right: (96-76)/2,
-            top: (96-76)/2,
+            right: (96 - 76) / 2,
+            top: (96 - 76) / 2,
             child: Image.asset('assets/logo-2.png'),
           ),
-           Positioned(
+          Positioned(
             left: -1,
             top: -5,
             child: Image.asset('assets/Ellipse464.png'),
